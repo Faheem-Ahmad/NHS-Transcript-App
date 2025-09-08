@@ -3,10 +3,15 @@
 import { useState } from "react";
 
 export default function HomePage() {
-  const [systemPrompt, setSystemPrompt] = useState("");
-  const [transcript, setTranscript] = useState("");
+  const [systemPrompt, setSystemPrompt] = useState(
+    "You are a helpful clinical note generator. Given a transcript of a patient interview, generate a concise and accurate clinical note summarizing the key points discussed."
+  );
+  const [transcript, setTranscript] = useState(
+    "I am feeling low in mood and have lost interest in activities I used to enjoy."
+  );
   const [response, setResponse] = useState("");
   const [error, setError] = useState("");
+  const [tone, setTone] = useState("neutral");
 
   const handleGenerate = async () => {
     setError("");
@@ -16,7 +21,11 @@ export default function HomePage() {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ systemPrompt, transcript }),
+        // body: JSON.stringify({ systemPrompt, transcript }),
+        body: JSON.stringify({
+          systemPrompt: `${systemPrompt}\n\nPlease use a ${tone} tone.`,
+          transcript,
+        }),
       });
 
       const data = await res.json();
@@ -34,6 +43,20 @@ export default function HomePage() {
   return (
     <main className="p-6 max-w-4xl mx-auto space-y-6">
       <h1 className="text-2xl font-bold">NHS Transcript Processor</h1>
+      {/* Tone Selector */}
+      <div>
+        <label className="block font-semibold mb-1">Select Tone</label>
+        <select
+          className="w-full p-2 border rounded text-black bg-white"
+          value={tone}
+          onChange={(e) => setTone(e.target.value)}
+        >
+          <option value="neutral">Neutral</option>
+          <option value="empathetic">Empathetic</option>
+          <option value="formal">Formal</option>
+          <option value="concise">Concise</option>
+        </select>
+      </div>
 
       {/* System Prompt */}
       <div>
@@ -72,7 +95,7 @@ export default function HomePage() {
           Generated Clinical Note
         </label>
         <textarea
-          className="w-full p-2 border rounded bg-gray-50"
+          className="w-full p-2 border rounded bg-gray-50 text-black"
           rows={6}
           value={response}
           readOnly
