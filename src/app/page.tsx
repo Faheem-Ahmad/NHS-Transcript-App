@@ -12,6 +12,8 @@ export default function HomePage() {
   const [response, setResponse] = useState("");
   const [error, setError] = useState("");
   const [tone, setTone] = useState("neutral");
+  const [stylePreset, setStylePreset] = useState("narrative");
+  const [applyRefinements, setApplyRefinements] = useState(true);
 
   const handleGenerate = async () => {
     setError("");
@@ -23,7 +25,12 @@ export default function HomePage() {
         headers: { "Content-Type": "application/json" },
         // body: JSON.stringify({ systemPrompt, transcript }),
         body: JSON.stringify({
-          systemPrompt: `${systemPrompt}\n\nPlease use a ${tone} tone.`,
+          //  systemPrompt: `${systemPrompt}\n\nPlease use a ${tone} tone.`,
+          //   systemPrompt: `${systemPrompt}\n\nPlease use a ${tone} tone and format the output as ${stylePreset}.`,
+          systemPrompt: applyRefinements
+            ? `${systemPrompt}\n\nPlease use a ${tone} tone and format the output as ${stylePreset}.`
+            : systemPrompt,
+
           transcript,
         }),
       });
@@ -56,6 +63,33 @@ export default function HomePage() {
           <option value="formal">Formal</option>
           <option value="concise">Concise</option>
         </select>
+      </div>
+      {/* Style Preset Selector */}
+      <div className="mt-4">
+        <label className="block font-semibold mb-1">Select Style Preset</label>
+        <select
+          className="w-full p-2 border rounded text-black bg-white"
+          value={stylePreset}
+          onChange={(e) => setStylePreset(e.target.value)}
+        >
+          <option value="narrative">Narrative</option>
+          <option value="soap">SOAP Format</option>
+          <option value="bullet">Bullet Points</option>
+          <option value="shorthand">Clinical Shorthand</option>
+        </select>
+      </div>
+      {/* Refinement Toggle */}
+      <div className="mt-4 flex items-center">
+        <input
+          type="checkbox"
+          id="refinementToggle"
+          checked={applyRefinements}
+          onChange={(e) => setApplyRefinements(e.target.checked)}
+          className="mr-2"
+        />
+        <label htmlFor="refinementToggle" className="font-semibold">
+          Apply phrasing refinements (tone + style)
+        </label>
       </div>
 
       {/* System Prompt */}
@@ -100,6 +134,13 @@ export default function HomePage() {
           value={response}
           readOnly
         />
+        {/* Live Preview Panel */}
+        {response && (
+          <div className="mt-6 p-4 border rounded bg-gray-50">
+            <h3 className="text-lg font-semibold mb-2">Live Preview</h3>
+            <div className="whitespace-pre-wrap text-gray-800">{response}</div>
+          </div>
+        )}
       </div>
 
       {/* Error Message (Dev Only) */}
