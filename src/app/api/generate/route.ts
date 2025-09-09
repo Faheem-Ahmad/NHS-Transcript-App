@@ -14,8 +14,8 @@ export async function POST(req: Request) {
       const openaiKey = process.env.OPENAI_API_KEY;
       const openaiUrl = process.env.OPENAI_API_ENDPOINT;
       // Debug logs
-      console.log("OPENAI_API_KEY from .env:", openaiKey);
-      console.log("OPENAI_API_URL from .env:", openaiUrl);
+      //   console.log("OPENAI_API_KEY from .env:", openaiKey);
+      //   console.log("OPENAI_API_URL from .env:", openaiUrl);
 
       const res = await axios.post(
         openaiUrl!,
@@ -23,6 +23,7 @@ export async function POST(req: Request) {
           model: "gpt-4", // or 'gpt-4o' if supported
           messages: [
             { role: "system", content: systemPrompt },
+
             { role: "user", content: transcript },
           ],
           temperature: 0.7,
@@ -35,6 +36,7 @@ export async function POST(req: Request) {
           },
         }
       );
+      console.log("System Prompt:", systemPrompt);
 
       responseText = res.data.choices?.[0]?.message?.content || "";
     } else if (provider === "azure") {
@@ -46,8 +48,8 @@ export async function POST(req: Request) {
 
       //   console.log("AZURE_OPENAI_API_KEY from .env:", azureKey);
       //  console.log("AZURE_OPENAI_ENDPOINT from .env:", azureEndpoint);
-      console.log("AZURE_OPENAI_DEPLOYMENT from .env:", deployment);
-      console.log("AZURE_OPENAI_API_VERSION from .env:", apiVersion);
+      //  console.log("AZURE_OPENAI_DEPLOYMENT from .env:", deployment);
+      //   console.log("AZURE_OPENAI_API_VERSION from .env:", apiVersion);
 
       const res = await axios.post(
         `${azureEndpoint}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`,

@@ -1,8 +1,8 @@
+```typescript
 "use client";
 
 import { useState } from "react";
 import { phrasingModules } from "@/lib/phrasingModules";
-import { ToneKey, StyleKey } from "@/lib/phrasingModules";
 
 export default function HomePage() {
   const [systemPrompt, setSystemPrompt] = useState(
@@ -13,31 +13,26 @@ export default function HomePage() {
   );
   const [response, setResponse] = useState("");
   const [error, setError] = useState("");
+  const [tone, setTone] = useState("neutral");
+  const [stylePreset, setStylePreset] = useState("narrative");
   const [applyRefinements, setApplyRefinements] = useState(true);
-
-  const [tone, setTone] = useState<ToneKey>("neutral");
-  const [stylePreset, setStylePreset] = useState<StyleKey>("narrative");
 
   const handleGenerate = async () => {
     setError("");
     setResponse("");
 
     try {
-      // Get modular phrasing instructions
-      const toneInstruction = phrasingModules.tone[tone];
-      const styleInstruction = phrasingModules.style[stylePreset];
-
-      // Compose final system prompt
-      const finalPrompt = applyRefinements
-        ? `${systemPrompt}\n\n${toneInstruction}\n${styleInstruction}`
-        : systemPrompt;
-
-      // Send request to API
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        // body: JSON.stringify({ systemPrompt, transcript }),
         body: JSON.stringify({
-          systemPrompt: finalPrompt,
+          //  systemPrompt: `${systemPrompt}\n\nPlease use a ${tone} tone.`,
+          //   systemPrompt: `${systemPrompt}\n\nPlease use a ${tone} tone and format the output as ${stylePreset}.`,
+          systemPrompt: applyRefinements
+            ? `${systemPrompt}\n\nPlease use a ${tone} tone and format the output as ${stylePreset}.`
+            : systemPrompt,
+
           transcript,
         }),
       });
@@ -63,8 +58,7 @@ export default function HomePage() {
         <select
           className="w-full p-2 border rounded text-black bg-white"
           value={tone}
-          //  onChange={(e) => setTone(e.target.value)}
-          onChange={(e) => setTone(e.target.value as ToneKey)}
+          onChange={(e) => setTone(e.target.value)}
         >
           <option value="neutral">Neutral</option>
           <option value="empathetic">Empathetic</option>
@@ -78,8 +72,7 @@ export default function HomePage() {
         <select
           className="w-full p-2 border rounded text-black bg-white"
           value={stylePreset}
-          //   onChange={(e) => setStylePreset(e.target.value)}
-          onChange={(e) => setStylePreset(e.target.value as StyleKey)}
+          onChange={(e) => setStylePreset(e.target.value)}
         >
           <option value="narrative">Narrative</option>
           <option value="soap">SOAP Format</option>
@@ -169,3 +162,4 @@ export default function HomePage() {
     </main>
   );
 }
+```
