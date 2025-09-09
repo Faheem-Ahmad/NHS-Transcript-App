@@ -1,4 +1,48 @@
-@import "tailwindcss";
+@import "tailwindcss"; /* Pulls in Tailwind's base, components, and utilities (via the Tailwind CLI/postcss setup). */
+
+/* ---------- CSS custom properties (light defaults) ---------- */
+:root {
+  /* The root scope for CSS variables. */
+  --background: #ffffff; /* Default page background (light mode). Change to any hex to alter the light background. */
+  --foreground: #171717; /* Default text color (dark gray). */
+}
+
+/* ---------- Map variables into a theme namespace Tailwind can reference ---------- */
+@theme inline {
+  /* Defines design tokens Tailwind can read with the @theme experimental API. */
+  --color-background: var(
+    --background
+  ); /* Re-exposes background color under a theme name. */
+  --color-foreground: var(
+    --foreground
+  ); /* Re-exposes text color under a theme name. */
+  --font-sans: var(
+    --font-geist-sans
+  ); /* Uses a custom sans font (e.g., from next/font). */
+  --font-mono: var(--font-geist-mono); /* Uses a custom mono font. */
+}
+
+/* ---------- System dark-mode override (this is what's turning things black) ---------- */
+@media (prefers-color-scheme: dark) {
+  /* Applies when the OS/browser is set to Dark Mode. */
+  :root {
+    /* Overrides the same variables only in dark contexts. */
+    --background: #f7f6f6; /* DARK background (near-black). If you want to stay white always, remove this block or set this to #ffffff for white and to #0a0a0a for dark. */
+    --foreground: #080808; /* For LIGHT text on dark background set it to ededed for black text set it to 0a0a0a. */
+  }
+}
+
+/* ---------- Global element styles ---------- */
+body {
+  /* Global page styling. */
+  background: var(
+    --background
+  ); /* Uses whichever --background is active (light by default, dark if media query matched). */
+  color: var(--foreground); /* Uses the matching text color variable. */
+  font-family: Arial, Helvetica, sans-serif; /* Fallback stack; your Tailwind classes can override with the themed fonts. */
+}
+
+/* @import "tailwindcss";
 
 :root {
   --background: #ffffff;
@@ -24,3 +68,4 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+ */
