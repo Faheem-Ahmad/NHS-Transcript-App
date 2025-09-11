@@ -1,3 +1,4 @@
+// app/anonymize/page.tsx
 "use client";
 
 import React, { useMemo, useState } from "react";
@@ -13,31 +14,27 @@ type Entity = {
 
 export default function AnonymizePage() {
   const [sourceText, setSourceText] = useState("");
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState("en-gb");
   const [loading, setLoading] = useState(false);
 
   const [redactedText, setRedactedText] = useState("");
   const [entities, setEntities] = useState<Entity[]>([]);
 
-  // debug state
+  // toggles
+  const [redactLocsOrgs, setRedactLocsOrgs] = useState(true);
+  const [keepDates, setKeepDates] = useState(true);
+
+  // allow-list textarea
+  const [allowListText, setAllowListText] = useState(
+    "David, Emma, Sarah, Alison"
+  );
+
+  // debug
   const [debugOpen, setDebugOpen] = useState(true);
   const [lastRequestId, setLastRequestId] = useState<string | null>(null);
   const [lastStatus, setLastStatus] = useState<number | null>(null);
   const [lastError, setLastError] = useState<string | null>(null);
   const [lastAzureError, setLastAzureError] = useState<any>(null);
-
-  // inside your AnonymizePage component, in the controls section
-  const [redactLocsOrgs, setRedactLocsOrgs] = useState(true);
-
-  const [keepDates, setKeepDates] = useState(true); // default ON
-
-  // in runAnonymize() request body:
-  body: JSON.stringify({
-    text: sourceText,
-    language,
-    redactLocationsAndOrgs: redactLocsOrgs,
-    keepDates,
-  });
 
   const entitySummary = useMemo(() => {
     const counts = new Map<string, number>();
@@ -48,6 +45,13 @@ export default function AnonymizePage() {
       .join("  ·  ");
   }, [entities]);
 
+  function parseAllowNames(input: string): string[] {
+    return input
+      .split(",")
+      .map((s) => s.replace(/\s+/g, " ").trim())
+      .filter(Boolean);
+  }
+
   async function runAnonymize() {
     setLoading(true);
     setRedactedText("");
@@ -57,43 +61,29 @@ export default function AnonymizePage() {
     setLastStatus(null);
     setLastRequestId(null);
 
-    console.debug("[ui] POST /api/skip", {
-      language,
-      textLength: sourceText.length,
-    });
+    const allowNames = parseAllowNames(allowListText);
 
     try {
       const res = await fetch("/api/skip", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-
-        /* body: JSON.stringify({
+        body: JSON.stringify({
           text: sourceText,
           language,
           redactLocationsAndOrgs: redactLocsOrgs,
           keepDates,
-        }), */
-        body: JSON.stringify({
-          text: sourceText,
-          language: "en-gb",
-          keepDates: true,
-          redactLocationsAndOrgs: true,
-          allowNames: ["David", "Emma", "Sarah", "Alison"], // these stay visible if tagged as Person
+          allowNames, // ← comes from the textarea
         }),
       });
 
       setLastStatus(res.status);
-
-      // Read text first so we can diagnose JSON parse errors
       const raw = await res.text();
-      console.debug("[ui] /api/anonymize raw response", raw.slice(0, 500));
 
       let data: any = null;
       try {
         data = raw ? JSON.parse(raw) : null;
       } catch (err) {
         setLastError("Response was not valid JSON");
-        console.error("[ui] JSON parse error", err);
         return;
       }
 
@@ -101,22 +91,25 @@ export default function AnonymizePage() {
         setLastRequestId(data?.requestId ?? null);
         setLastError(data?.error ?? "Request failed");
         setLastAzureError(data?.azureError ?? null);
-        console.error("[ui] API error", { status: res.status, data });
         return;
       }
 
       setLastRequestId(data?.requestId ?? null);
       setRedactedText(data.redactedText ?? "");
       setEntities(Array.isArray(data.entities) ? data.entities : []);
-      console.debug("[ui] success", {
-        entities: (data.entities || []).length,
-        redactedLength: (data.redactedText || "").length,
-      });
     } catch (err: any) {
       setLastError(err?.message ?? "Network error");
-      console.error("[ui] fetch error", err);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function copyToClipboard(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      alert("Copied!");
+    } catch {
+      alert("Copy failed");
     }
   }
 
@@ -126,24 +119,9 @@ export default function AnonymizePage() {
         PII Anonymizer (Azure Language)
       </h1>
 
-      <label className="flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
-          checked={redactLocsOrgs}
-          onChange={(e) => setRedactLocsOrgs(e.target.checked)}
-        />
-        Also remove Locations & Organizations
-      </label>
-      <label className="flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
-          checked={keepDates}
-          onChange={(e) => setKeepDates(e.target.checked)}
-        />
-        Keep dates
-      </label>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-        <div className="flex-1">
+      {/* Controls row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
           <label className="block text-sm font-medium mb-1">Language</label>
           <select
             className="w-full rounded border px-3 py-2"
@@ -155,24 +133,66 @@ export default function AnonymizePage() {
           </select>
         </div>
 
-        <button
-          onClick={runAnonymize}
-          disabled={loading || !sourceText.trim()}
-          className="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
-        >
-          {loading ? "Anonymizing…" : "Anonymize"}
-        </button>
+        <div className="flex items-end gap-4">
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={redactLocsOrgs}
+              onChange={(e) => setRedactLocsOrgs(e.target.checked)}
+            />
+            Also remove Locations & Organizations
+          </label>
 
-        <button
-          onClick={() => setDebugOpen((v) => !v)}
-          className="rounded border px-3 py-2"
-          title="Toggle debug panel"
-        >
-          {debugOpen ? "Hide debug" : "Show debug"}
-        </button>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={keepDates}
+              onChange={(e) => setKeepDates(e.target.checked)}
+            />
+            Keep dates
+          </label>
+
+          <button
+            onClick={runAnonymize}
+            disabled={loading || !sourceText.trim()}
+            className="ml-auto rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
+            title={
+              !sourceText.trim()
+                ? "Paste some text first"
+                : "Send to anonymizer"
+            }
+          >
+            {loading ? "Anonymizing…" : "Anonymize"}
+          </button>
+
+          <button
+            onClick={() => setDebugOpen((v) => !v)}
+            className="rounded border px-3 py-2"
+            title="Toggle debug panel"
+          >
+            {debugOpen ? "Hide debug" : "Show debug"}
+          </button>
+        </div>
       </div>
 
-      {/* Input */}
+      {/* Allow-list textarea */}
+      <div>
+        <label className="block text-sm font-medium mb-1">
+          Person names to keep (comma-separated)
+        </label>
+        <textarea
+          className="w-full min-h-[5rem] rounded border px-3 py-2"
+          placeholder="e.g., David, Emma, Sarah, Alison"
+          value={allowListText}
+          onChange={(e) => setAllowListText(e.target.value)}
+        />
+        <p className="mt-1 text-xs text-gray-600">
+          These names will be kept if the service tags them as{" "}
+          <code>Person</code>.
+        </p>
+      </div>
+
+      {/* Input textarea */}
       <div>
         <label className="block text-sm font-medium mb-1">
           Input (raw transcript)
@@ -193,7 +213,7 @@ export default function AnonymizePage() {
         </div>
       </div>
 
-      {/* Output */}
+      {/* Output textarea */}
       <div>
         <div className="flex items-center justify-between">
           <label className="block text-sm font-medium mb-1">
@@ -209,6 +229,15 @@ export default function AnonymizePage() {
           value={redactedText}
           placeholder="Redacted text will appear here…"
         />
+        <div className="mt-2 flex gap-2">
+          <button
+            onClick={() => copyToClipboard(redactedText)}
+            disabled={!redactedText}
+            className="rounded border px-3 py-1 disabled:opacity-50"
+          >
+            Copy redacted text
+          </button>
+        </div>
       </div>
 
       {/* Debug panel */}
@@ -235,6 +264,12 @@ export default function AnonymizePage() {
           )}
         </div>
       )}
+
+      <p className="text-xs text-gray-500">
+        This page posts to your <code>/api/anonymize</code> route. The server
+        uses your Azure Language resource to redact PII. The allow-list applies
+        only to entities tagged as <code>Person</code>.
+      </p>
     </main>
   );
 }
