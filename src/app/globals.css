@@ -42,6 +42,24 @@ body {
   font-family: Arial, Helvetica, sans-serif; /* Fallback stack; your Tailwind classes can override with the themed fonts. */
 }
 
+/* Optional: make buttons/inputs a touch nicer without pulling in any libs */
+button {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f8f8f8;
+  cursor: pointer;
+}
+button:hover {
+  background: #f0f0f0;
+}
+textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: vertical;
+}
+
 /* @import "tailwindcss";
 
 :root {

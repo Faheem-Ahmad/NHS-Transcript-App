@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NHS Transcript App",
+  title: "QuickNoteMD - AI-Powered",
   description: "AI-powered clinical note generation from patient transcripts",
 };
 

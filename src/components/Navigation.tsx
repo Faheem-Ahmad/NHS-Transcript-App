@@ -13,6 +13,8 @@ const Navigation = () => {
     { name: "Anon", href: "/anon" },
     { name: "Dates", href: "/dates" },
     { name: "Skip", href: "/skip" },
+    { name: "Eat", href: "azureNew" },
+    { name: "Parent", href: "/parent" },
     { name: "About", href: "/about" },
 
     // Add more navigation items here as needed
