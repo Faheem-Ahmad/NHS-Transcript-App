@@ -8,7 +8,13 @@ const Navigation = () => {
 
   const navItems = [
     { name: "Home", href: "/" },
+    { name: "Rapid", href: "/Rapid" },
+    { name: "Anonymise", href: "/anonymise" },
+    { name: "Anon", href: "/anon" },
+    { name: "Dates", href: "/dates" },
+    { name: "Skip", href: "/skip" },
     { name: "About", href: "/about" },
+
     // Add more navigation items here as needed
     // { name: "Services", href: "/services" },
     // { name: "Contact", href: "/contact" },
@@ -22,7 +28,7 @@ const Navigation = () => {
             {/* Logo/Brand */}
             <div className="flex-shrink-0 flex items-center">
               <Link href="/" className="text-xl font-bold text-gray-900">
-                NHS Transcript
+                QuickNoteMD
               </Link>
             </div>
 
