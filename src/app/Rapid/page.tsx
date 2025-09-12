@@ -8,6 +8,17 @@ type ChatMessage = {
   content: string;
 };
 
+// Add interface for the prompt response
+interface PromptResponse {
+  id: string;
+  type: string;
+  keyword: string;
+  content: string;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export default function Page() {
   const [model, setModel] = useState<string>("gpt-5");
   const [systemPrompt, setSystemPrompt] = useState<string>("");
@@ -16,7 +27,40 @@ export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
   const [briefError, setBriefError] = useState<string>("");
   const [errorDetails, setErrorDetails] = useState<string>("");
+  // Add loading state for prompt fetching
+  const [loadingPrompt, setLoadingPrompt] = useState<boolean>(false);
 
+  // Add function to handle prompt fetching
+  async function handleFetchPrompt(keyword: string, type: string) {
+    setLoadingPrompt(true);
+    setBriefError(""); // Clear any previous errors
+
+    try {
+      const response = await fetch(
+        `/api/prompts?keyword=${keyword}&type=${type}`
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setBriefError(
+          errorData.error || `Failed to fetch prompt: ${response.status}`
+        );
+        return;
+      }
+
+      const promptData: PromptResponse = await response.json();
+
+      // Set the fetched content to the system prompt textarea
+      setSystemPrompt(promptData.content);
+    } catch (error: any) {
+      setBriefError(error.message || "Error fetching prompt");
+      console.error("Error fetching prompt:", error);
+    } finally {
+      setLoadingPrompt(false);
+    }
+  }
+
+  // ...existing code...
   async function handleGetResponse() {
     setBriefError("");
     setErrorDetails("");
@@ -85,6 +129,7 @@ export default function Page() {
     }
   }
 
+  // ...existing utility functions...
   function handleClearResponse() {
     setResponseText("");
     setBriefError("");
@@ -119,13 +164,18 @@ export default function Page() {
         <aside className="hidden md:block border-r border-gray-200 p-4 bg-gradient-to-b from-slate-50 to-white">
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-slate-700 mb-6 text-center border-b border-slate-200 pb-3">
-              System Prompts
+              Actions
             </h3>
 
-            <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
+            {/* Interview Detailed Button - Updated with click handler */}
+            <button
+              onClick={() => handleFetchPrompt("interview-new", "Interview")}
+              disabled={loadingPrompt}
+              className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <div className="flex items-center justify-between">
                 <span className="font-medium text-slate-700 group-hover:text-blue-700">
-                  Interview Detailed
+                  {loadingPrompt ? "Loading..." : "Interview Detailed"}
                 </span>
                 <svg
                   className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"
@@ -143,6 +193,7 @@ export default function Page() {
               </div>
             </button>
 
+            {/* Rest of the buttons remain unchanged for now */}
             <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
               <div className="flex items-center justify-between">
                 <span className="font-medium text-slate-700 group-hover:text-blue-700">
@@ -164,6 +215,7 @@ export default function Page() {
               </div>
             </button>
 
+            {/* ...existing buttons remain unchanged... */}
             <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
               <div className="flex items-center justify-between">
                 <span className="font-medium text-slate-700 group-hover:text-blue-700">
@@ -355,7 +407,7 @@ export default function Page() {
           </div>
         </aside>
 
-        {/* Middle column (ALL existing content goes here) */}
+        {/* Middle column (ALL existing content goes here) - UNCHANGED */}
         <section className="p-4 md:p-6">
           {/* Top controls: Model select + Get response */}
           <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
@@ -385,7 +437,7 @@ export default function Page() {
             </div>
           </div>
 
-          {/* System prompt textarea */}
+          {/* System prompt textarea - UNCHANGED */}
           <section className="mb-6">
             <label className="mb-1 block text-sm font-semibold">
               System prompt
@@ -397,10 +449,11 @@ export default function Page() {
               className="min-h-[180px] w-full resize-y rounded-xl border border-gray-300 bg-white p-3 text-[15px] leading-relaxed text-white"
             />
             <p className="mt-1 ml-0.5 text-sm text-gray-500">
-              This guides the assistant’s overall behaviour.
+              This guides the assistant's overall behaviour.
             </p>
           </section>
 
+          {/* ...rest of the middle column content remains exactly the same... */}
           {/* User prompt textarea */}
           <section className="mb-6">
             <label className="mb-1 block text-sm font-semibold">
@@ -444,7 +497,7 @@ export default function Page() {
             <textarea
               placeholder={
                 loading
-                  ? "Waiting for the model’s response…"
+                  ? "Waiting for the model's response…"
                   : "Model response will appear here…"
               }
               value={responseText}
