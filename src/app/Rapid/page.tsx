@@ -39,8 +39,6 @@ export default function Page() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data?.ok) {
-        // Prefer a concise, human-readable error on top,
-        // and full details in the 4th textarea.
         const concise =
           data?.errorDetails?.parsedError?.error?.message ||
           data?.errorDetails?.message ||
@@ -112,222 +110,150 @@ export default function Page() {
     }
   }
 
-  // Simple inline styles
-  const containerStyle: React.CSSProperties = {
-    maxWidth: 1100,
-    margin: "40px auto",
-    padding: "0 16px",
-  };
-
-  const topBarStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-    justifyContent: "space-between",
-    marginBottom: 8,
-    flexWrap: "wrap",
-  };
-
-  const leftStackStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    flexWrap: "wrap",
-  };
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: 14,
-    fontWeight: 600,
-  };
-
-  const selectStyle: React.CSSProperties = {
-    padding: "10px 12px",
-    borderRadius: 8,
-    border: "1px solid #d1d5db",
-    fontSize: 14,
-    minWidth: 220,
-  };
-
-  const buttonPrimary: React.CSSProperties = {
-    padding: "10px 16px",
-    borderRadius: 8,
-    border: "1px solid #111827",
-    background: "#111827",
-    color: "white",
-    fontWeight: 600,
-    cursor: "pointer",
-  };
-
-  const buttonSecondary: React.CSSProperties = {
-    padding: "8px 14px",
-    borderRadius: 8,
-    border: "1px solid #d1d5db",
-    background: "white",
-    color: "#111827",
-    fontWeight: 600,
-    cursor: "pointer",
-  };
-
-  const controlRowStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-    marginBottom: 12,
-    flexWrap: "wrap",
-  };
-
-  const sectionStyle: React.CSSProperties = {
-    marginBottom: 24,
-  };
-
-  const systemPromptAreaStyle: React.CSSProperties = {
-    width: "100%",
-    borderRadius: 10,
-    border: "1px solid #d1d5db",
-    padding: 14,
-    fontSize: 15,
-    lineHeight: 1.5,
-    resize: "vertical",
-    boxSizing: "border-box",
-    background: "white",
-    color: "white",
-    //color influences the text color
-  };
-  const textareaStyle: React.CSSProperties = {
-    width: "100%",
-    borderRadius: 10,
-    border: "1px solid #d1d5db",
-    padding: 14,
-    fontSize: 15,
-    lineHeight: 1.5,
-    resize: "vertical",
-    boxSizing: "border-box",
-    background: "white",
-    color: "black",
-  };
-
-  const hintStyle: React.CSSProperties = {
-    fontSize: 13,
-    color: "#6b7280",
-    margin: "6px 0 0 2px",
-  };
-
-  const errorStyle: React.CSSProperties = {
-    marginTop: 4,
-    color: "#b91c1c",
-    fontSize: 14,
-    fontWeight: 600,
-  };
-
   return (
-    <main style={containerStyle}>
-      {/* Top controls: Model select + Get response */}
-      <div style={topBarStyle}>
-        <div style={leftStackStyle}>
-          <span style={labelStyle}>Model:</span>
-          <select
-            value={model}
-            onChange={(e) => setModel(e.target.value)}
-            style={selectStyle}
-            aria-label="Select GPT model"
-          >
-            <option value="gpt-5">gpt-5</option>
-            <option value="gpt-5-mini">gpt-5-mini</option>
-            <option value="gpt-4.1">gpt-4.1</option>
-            <option value="gpt-4o">gpt-4o</option>
-          </select>
-        </div>
-        <div>
-          <button
-            style={buttonPrimary}
-            onClick={handleGetResponse}
-            disabled={loading}
-            aria-busy={loading}
-          >
-            {loading ? "Getting response…" : "Get response"}
-          </button>
-        </div>
+    <main className="min-h-screen w-full">
+      {/* 3-column layout: 20% / 60% / 20% */}
+      <div className="grid grid-cols-[20%_60%_20%] min-h-screen">
+        {/* Left column (empty/reserved) */}
+        <aside className="hidden md:block border-r border-gray-200 p-4"></aside>
+
+        {/* Middle column (ALL existing content goes here) */}
+        <section className="p-4 md:p-6">
+          {/* Top controls: Model select + Get response */}
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-sm font-semibold">Model:</span>
+              <select
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                aria-label="Select GPT model"
+                className="min-w-[220px] rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              >
+                <option value="gpt-5">gpt-5</option>
+                <option value="gpt-5-mini">gpt-5-mini</option>
+                <option value="gpt-4.1">gpt-4.1</option>
+                <option value="gpt-4o">gpt-4o</option>
+              </select>
+            </div>
+            <div>
+              <button
+                onClick={handleGetResponse}
+                disabled={loading}
+                aria-busy={loading}
+                className="rounded-lg border border-gray-900 bg-gray-900 px-4 py-2 font-semibold text-black disabled:opacity-70"
+              >
+                {loading ? "Getting response…" : "Get response"}
+              </button>
+            </div>
+          </div>
+
+          {/* System prompt textarea */}
+          <section className="mb-6">
+            <label className="mb-1 block text-sm font-semibold">
+              System prompt
+            </label>
+            <textarea
+              placeholder="Paste your system prompt here…"
+              value={systemPrompt}
+              onChange={(e) => setSystemPrompt(e.target.value)}
+              className="min-h-[180px] w-full resize-y rounded-xl border border-gray-300 bg-white p-3 text-[15px] leading-relaxed text-white"
+            />
+            <p className="mt-1 ml-0.5 text-sm text-gray-500">
+              This guides the assistant’s overall behaviour.
+            </p>
+          </section>
+
+          {/* User prompt textarea */}
+          <section className="mb-6">
+            <label className="mb-1 block text-sm font-semibold">
+              User prompt (Interview transcript)
+            </label>
+            <textarea
+              placeholder="Paste the interview transcript (user prompt) here…"
+              value={userPrompt}
+              onChange={(e) => setUserPrompt(e.target.value)}
+              className="min-h-[220px] w-full resize-y rounded-xl border border-gray-300 bg-white p-3 text-[15px] leading-relaxed text-black"
+            />
+            <p className="mt-1 ml-0.5 text-sm text-gray-500">
+              This is sent as the user message.
+            </p>
+          </section>
+
+          {/* Brief error line + response controls */}
+          <div className="mb-3 flex flex-wrap items-center gap-3">
+            <button
+              onClick={handleClearResponse}
+              className="rounded-lg border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-900"
+            >
+              Clear response
+            </button>
+            <button
+              onClick={handleCopyResponse}
+              className="rounded-lg border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-900"
+            >
+              Copy response to clipboard
+            </button>
+            {briefError ? (
+              <span className="text-sm font-semibold text-red-700">
+                {briefError}
+              </span>
+            ) : null}
+          </div>
+
+          {/* Response textarea */}
+          <section className="mb-6">
+            <label className="mb-1 block text-sm font-semibold">Response</label>
+            <textarea
+              placeholder={
+                loading
+                  ? "Waiting for the model’s response…"
+                  : "Model response will appear here…"
+              }
+              value={responseText}
+              onChange={(e) => setResponseText(e.target.value)}
+              className="min-h-[260px] w-full resize-y rounded-xl border border-gray-300 bg-white p-3 text-[15px] leading-relaxed text-black"
+            />
+            <p className="mt-1 ml-0.5 text-sm text-gray-500">
+              You can edit or paste into this area as well.
+            </p>
+          </section>
+
+          {/* Error controls + error details */}
+          <div className="mb-3 flex flex-wrap items-center gap-3">
+            <button
+              onClick={handleClearErrors}
+              className="rounded-lg border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-900"
+            >
+              Clear errors
+            </button>
+            <button
+              onClick={handleCopyErrors}
+              className="rounded-lg border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-900"
+            >
+              Copy errors to clipboard
+            </button>
+          </div>
+
+          <section className="mb-6">
+            <label className="mb-1 block text-sm font-semibold">
+              Error details (if any)
+            </label>
+            <textarea
+              placeholder="If the API cannot respond, detailed error information will appear here…"
+              value={errorDetails}
+              onChange={(e) => setErrorDetails(e.target.value)}
+              className="min-h-[200px] w-full resize-y rounded-xl border border-gray-300 bg-white p-3 text-[15px] leading-relaxed text-black font-mono"
+            />
+            <p className="mt-1 ml-0.5 text-sm text-gray-500">
+              Full diagnostics: status, headers, endpoint, payload summary, and
+              any error JSON from the provider.
+            </p>
+          </section>
+        </section>
+
+        {/* Right column (empty/reserved) */}
+        <aside className="hidden md:block border-l border-gray-200 p-4"></aside>
       </div>
-
-      {/* System prompt textarea */}
-      <section style={sectionStyle}>
-        <label style={labelStyle}>System prompt</label>
-        <textarea
-          style={{ ...systemPromptAreaStyle, minHeight: 180 }}
-          placeholder="Paste your system prompt here…"
-          value={systemPrompt}
-          onChange={(e) => setSystemPrompt(e.target.value)}
-        />
-        <p style={hintStyle}>This guides the assistant’s overall behaviour.</p>
-      </section>
-
-      {/* User prompt textarea */}
-      <section style={sectionStyle}>
-        <label style={labelStyle}>User prompt (Interview transcript)</label>
-        <textarea
-          style={{ ...textareaStyle, minHeight: 220 }}
-          placeholder="Paste the interview transcript (user prompt) here…"
-          value={userPrompt}
-          onChange={(e) => setUserPrompt(e.target.value)}
-        />
-        <p style={hintStyle}>This is sent as the user message.</p>
-      </section>
-
-      {/* Brief error line + response controls */}
-      <div style={controlRowStyle}>
-        <button style={buttonSecondary} onClick={handleClearResponse}>
-          Clear response
-        </button>
-        <button style={buttonSecondary} onClick={handleCopyResponse}>
-          Copy response to clipboard
-        </button>
-        {briefError ? <span style={errorStyle}>{briefError}</span> : null}
-      </div>
-
-      {/* Response textarea */}
-      <section style={sectionStyle}>
-        <label style={labelStyle}>Response</label>
-        <textarea
-          style={{ ...textareaStyle, minHeight: 260 }}
-          placeholder={
-            loading
-              ? "Waiting for the model’s response…"
-              : "Model response will appear here…"
-          }
-          value={responseText}
-          onChange={(e) => setResponseText(e.target.value)}
-        />
-        <p style={hintStyle}>You can edit or paste into this area as well.</p>
-      </section>
-
-      {/* Error controls + error details textarea (4th area) */}
-      <div style={controlRowStyle}>
-        <button style={buttonSecondary} onClick={handleClearErrors}>
-          Clear errors
-        </button>
-        <button style={buttonSecondary} onClick={handleCopyErrors}>
-          Copy errors to clipboard
-        </button>
-      </div>
-
-      <section style={sectionStyle}>
-        <label style={labelStyle}>Error details (if any)</label>
-        <textarea
-          style={{
-            ...textareaStyle,
-            minHeight: 200,
-            fontFamily:
-              "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-          }}
-          placeholder="If the API cannot respond, detailed error information will appear here…"
-          value={errorDetails}
-          onChange={(e) => setErrorDetails(e.target.value)}
-        />
-        <p style={hintStyle}>
-          Full diagnostics: status, headers, endpoint, payload summary, and any
-          error JSON from the provider.
-        </p>
-      </section>
     </main>
   );
 }
