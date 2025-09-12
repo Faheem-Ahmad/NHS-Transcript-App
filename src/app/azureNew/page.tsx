@@ -171,7 +171,7 @@ export default function AnonymizePage() {
         Anonymise → Process (stateless)
       </h1>
 
-      {/* Controls */}
+      {/* Controls Page Title Eat*/}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Language</label>
@@ -192,7 +192,7 @@ export default function AnonymizePage() {
               checked={redactLocsOrgs}
               onChange={(e) => setRedactLocsOrgs(e.target.checked)}
             />
-            Also remove Locations & Organizations
+            L & O
           </label>
 
           <label className="flex items-center gap-2 text-sm">

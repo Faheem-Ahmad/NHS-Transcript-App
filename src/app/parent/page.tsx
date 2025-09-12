@@ -17,7 +17,7 @@ export default function Page() {
       style={{ display: "flex", flexDirection: "column", gap: 8 }}
     >
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        {["A", "B", "C", "D"].map((label) => (
+        {["Apple", "Banana", "Cherry", "Date"].map((label) => (
           <button key={label} onClick={() => setValueAt(index, "hello world")}>
             {label}
           </button>

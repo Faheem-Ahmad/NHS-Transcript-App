@@ -120,9 +120,7 @@ export default function AnonymizePage() {
 
   return (
     <main className="mx-auto max-w-5xl p-6 space-y-6">
-      <h1 className="text-2xl font-semibold">
-        PII Anonymizer (Azure Language)
-      </h1>
+      <h1 className="text-2xl font-semibold"> Anonymizer </h1>
 
       <label className="flex items-center gap-2 text-sm">
         <input

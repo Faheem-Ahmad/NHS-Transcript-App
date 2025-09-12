@@ -96,9 +96,7 @@ export default function AnonymizePage() {
 
   return (
     <main className="mx-auto max-w-5xl p-6 space-y-6">
-      <h1 className="text-2xl font-semibold">
-        PII Anonymizer (Azure Language)
-      </h1>
+      <h1 className="text-2xl font-semibold"> Anonymizer </h1>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="flex-1">

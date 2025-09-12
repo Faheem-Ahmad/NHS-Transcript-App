@@ -134,7 +134,7 @@ export default function HomePage() {
               System Prompt
             </label>
             <textarea
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-white"
               rows={4}
               value={systemPrompt}
               onChange={(e) => setSystemPrompt(e.target.value)}

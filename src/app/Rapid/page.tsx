@@ -180,6 +180,19 @@ export default function Page() {
     marginBottom: 24,
   };
 
+  const systemPromptAreaStyle: React.CSSProperties = {
+    width: "100%",
+    borderRadius: 10,
+    border: "1px solid #d1d5db",
+    padding: 14,
+    fontSize: 15,
+    lineHeight: 1.5,
+    resize: "vertical",
+    boxSizing: "border-box",
+    background: "white",
+    color: "white",
+    //color influences the text color
+  };
   const textareaStyle: React.CSSProperties = {
     width: "100%",
     borderRadius: 10,
@@ -190,6 +203,7 @@ export default function Page() {
     resize: "vertical",
     boxSizing: "border-box",
     background: "white",
+    color: "black",
   };
 
   const hintStyle: React.CSSProperties = {
@@ -239,7 +253,7 @@ export default function Page() {
       <section style={sectionStyle}>
         <label style={labelStyle}>System prompt</label>
         <textarea
-          style={{ ...textareaStyle, minHeight: 180 }}
+          style={{ ...systemPromptAreaStyle, minHeight: 180 }}
           placeholder="Paste your system prompt here…"
           value={systemPrompt}
           onChange={(e) => setSystemPrompt(e.target.value)}

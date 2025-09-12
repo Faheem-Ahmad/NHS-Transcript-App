@@ -115,9 +115,7 @@ export default function AnonymizePage() {
 
   return (
     <main className="mx-auto max-w-5xl p-6 space-y-6">
-      <h1 className="text-2xl font-semibold">
-        PII Anonymizer (Azure Language)
-      </h1>
+      <h1 className="text-2xl font-semibold"> Anonymizer </h1>
 
       {/* Controls row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -140,7 +138,7 @@ export default function AnonymizePage() {
               checked={redactLocsOrgs}
               onChange={(e) => setRedactLocsOrgs(e.target.checked)}
             />
-            Also remove Locations & Organizations
+            L & O
           </label>
 
           <label className="flex items-center gap-2 text-sm">
