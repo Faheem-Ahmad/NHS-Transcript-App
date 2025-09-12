@@ -115,8 +115,245 @@ export default function Page() {
     <main className="min-h-screen w-full">
       {/* 3-column layout: 20% / 60% / 20% */}
       <div className="grid grid-cols-[20%_60%_20%] min-h-screen">
-        {/* Left column (empty/reserved) */}
-        <aside className="hidden md:block border-r border-gray-200 p-4"></aside>
+        {/* Left column - System Prompt Buttons */}
+        <aside className="hidden md:block border-r border-gray-200 p-4 bg-gradient-to-b from-slate-50 to-white">
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-slate-700 mb-6 text-center border-b border-slate-200 pb-3">
+              System Prompts
+            </h3>
+
+            <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-slate-700 group-hover:text-blue-700">
+                  Interview Detailed
+                </span>
+                <svg
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-slate-700 group-hover:text-blue-700">
+                  Interview Short
+                </span>
+                <svg
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-slate-700 group-hover:text-blue-700">
+                  Mental State
+                </span>
+                <svg
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-slate-700 group-hover:text-blue-700">
+                  Day to Day Progress
+                </span>
+                <svg
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-slate-700 group-hover:text-blue-700">
+                  Overall Summary of Progress
+                </span>
+                <svg
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-slate-700 group-hover:text-blue-700">
+                  Risk Assessment
+                </span>
+                <svg
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-slate-700 group-hover:text-blue-700">
+                  Formulation
+                </span>
+                <svg
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-slate-700 group-hover:text-blue-700">
+                  Impression
+                </span>
+                <svg
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-slate-700 group-hover:text-blue-700">
+                  Plan
+                </span>
+                <svg
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-slate-700 group-hover:text-blue-700">
+                  Nature and Degree
+                </span>
+                <svg
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-slate-700 group-hover:text-blue-700">
+                  MHA Recommendation
+                </span>
+                <svg
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+        </aside>
 
         {/* Middle column (ALL existing content goes here) */}
         <section className="p-4 md:p-6">
