@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-
+import { Copy } from "lucide-react"; // install lucide-react if not already: npm install lucide-react
 type Entity = {
   text: string;
   category: string;
@@ -18,6 +18,7 @@ export default function AnonymizePage() {
   const [keepDates, setKeepDates] = useState(true);
 
   const [allowListText, setAllowListText] = useState("");
+  //  const [allowListText, setAllowListText] = useState("");
 
   const [loadingAnon, setLoadingAnon] = useState(false);
   const [loadingProcess, setLoadingProcess] = useState(false);
@@ -69,7 +70,8 @@ export default function AnonymizePage() {
     const allowNames = parseAllowNames(allowListText);
 
     try {
-      const res = await fetch("/api/anonymize", {
+      // const res = await fetch("/api/anonymize", {
+      const res = await fetch("/api/skip", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -165,14 +167,21 @@ export default function AnonymizePage() {
     }
   }
 
+  async function handleCopyResponse() {
+    try {
+      await navigator.clipboard.writeText(redactedText || "");
+    } catch {
+      /*    setBriefError("Could not copy response to clipboard."); */
+    }
+  }
+
   return (
     <main className="mx-auto max-w-5xl p-6 space-y-6">
-      <h1 className="text-2xl font-semibold">
-        Anonymise → Process (stateless)
-      </h1>
+      <h1 className="text-2xl font-semibold">Anonymise</h1>
 
       {/* Controls Page Title Eat*/}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> */}
+      <div className="grid grid-cols-1 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Language</label>
           <select
@@ -207,7 +216,7 @@ export default function AnonymizePage() {
           <button
             onClick={runAnonymize}
             disabled={loadingAnon || !sourceText.trim()}
-            className="ml-auto rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
+            className="ml-auto rounded bg-blue-600 px-4 py-2 text-black disabled:opacity-50"
           >
             {loadingAnon ? "Anonymizing…" : "Anonymize"}
           </button>
@@ -279,6 +288,13 @@ export default function AnonymizePage() {
             }
           >
             {loadingProcess ? "Processing…" : "Process"}
+          </button>
+          <button
+            onClick={handleCopyResponse}
+            className="inline-flex min-w-[120px] items-center justify-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-black shadow-md transition duration-200 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1"
+          >
+            <Copy className="h-4 w-4" />
+            Copy
           </button>
         </div>
       </div>

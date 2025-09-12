@@ -1,7 +1,7 @@
-// app/page.tsx
 "use client";
 
 import React, { useState } from "react";
+import AnonymizePage from "@/components/Anonymiser";
 
 type ChatMessage = {
   role: "system" | "user" | "assistant";
@@ -164,7 +164,7 @@ export default function Page() {
         <aside className="hidden md:block border-r border-gray-200 p-4 bg-gradient-to-b from-slate-50 to-white">
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-slate-700 mb-6 text-center border-b border-slate-200 pb-3">
-              Actions
+              System Settings
             </h3>
 
             {/* Interview Detailed Button - Updated with click handler */}
@@ -215,7 +215,6 @@ export default function Page() {
               </div>
             </button>
 
-            {/* ...existing buttons remain unchanged... */}
             <button className="w-full text-left px-4 py-3 rounded-lg bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 group">
               <div className="flex items-center justify-between">
                 <span className="font-medium text-slate-700 group-hover:text-blue-700">
@@ -407,7 +406,7 @@ export default function Page() {
           </div>
         </aside>
 
-        {/* Middle column (ALL existing content goes here) - UNCHANGED */}
+        {/* Middle column (ALL existing content) - UNCHANGED */}
         <section className="p-4 md:p-6">
           {/* Top controls: Model select + Get response */}
           <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
@@ -430,34 +429,33 @@ export default function Page() {
                 onClick={handleGetResponse}
                 disabled={loading}
                 aria-busy={loading}
-                className="rounded-lg border border-gray-900 bg-gray-900 px-4 py-2 font-semibold text-black disabled:opacity-70"
+                className="rounded-lg border border-gray-900 bg-gray-900 px-4 py-2 font-semibold text-black hover:bg-gray-800 disabled:opacity-70"
               >
                 {loading ? "Getting response…" : "Get response"}
               </button>
             </div>
           </div>
 
-          {/* System prompt textarea - UNCHANGED */}
+          {/* System prompt textarea */}
           <section className="mb-6">
             <label className="mb-1 block text-sm font-semibold">
-              System prompt
+              System Settings
             </label>
             <textarea
               placeholder="Paste your system prompt here…"
               value={systemPrompt}
               onChange={(e) => setSystemPrompt(e.target.value)}
-              className="min-h-[180px] w-full resize-y rounded-xl border border-gray-300 bg-white p-3 text-[15px] leading-relaxed text-white"
+              className="min-h-[10px] w-full resize-y rounded-xl border border-gray-300 bg-white p-3 text-[15px] leading-relaxed text-white"
             />
             <p className="mt-1 ml-0.5 text-sm text-gray-500">
               This guides the assistant's overall behaviour.
             </p>
           </section>
 
-          {/* ...rest of the middle column content remains exactly the same... */}
           {/* User prompt textarea */}
           <section className="mb-6">
             <label className="mb-1 block text-sm font-semibold">
-              User prompt (Interview transcript)
+              Interview Transcript
             </label>
             <textarea
               placeholder="Paste the interview transcript (user prompt) here…"
@@ -476,13 +474,13 @@ export default function Page() {
               onClick={handleClearResponse}
               className="rounded-lg border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-900"
             >
-              Clear response
+              Clear Note
             </button>
             <button
               onClick={handleCopyResponse}
               className="rounded-lg border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-900"
             >
-              Copy response to clipboard
+              Copy Note to EMR
             </button>
             {briefError ? (
               <span className="text-sm font-semibold text-red-700">
@@ -542,8 +540,16 @@ export default function Page() {
           </section>
         </section>
 
-        {/* Right column (empty/reserved) */}
-        <aside className="hidden md:block border-l border-gray-200 p-4"></aside>
+        {/* Right column - Anonymiser Component */}
+        <aside className="hidden md:block border-l border-gray-200 bg-gradient-to-b from-slate-50 to-white overflow-y-auto">
+          <div className="p-3 h-full">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 h-full">
+              <div className="p-4 h-full overflow-y-auto">
+                <AnonymizePage />
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
     </main>
   );
