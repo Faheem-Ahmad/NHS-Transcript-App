@@ -27,6 +27,7 @@ const OPENAI_CHAT_COMPLETIONS_ENDPOINT =
 function isFixedSamplingModel(model: string): boolean {
   // Treat the flagship "gpt-5" as fixed. Variants like "gpt-5-mini" generally allow tuning.
   return model === "gpt-5";
+  // return model === "gpt-5" || model === "gpt-5-mini";
 }
 
 /**

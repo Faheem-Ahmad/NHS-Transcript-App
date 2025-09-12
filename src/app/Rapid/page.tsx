@@ -29,7 +29,8 @@ export default function Page() {
         systemPrompt: systemPrompt.trim(),
         userPrompt: userPrompt.trim(),
       };
-
+      // await fetch("/api/chat" works only with gpt-4.1 and gpt-4o and gpt-5
+      // const res = await fetch("/api/chat", {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
